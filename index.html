@@ -4,91 +4,78 @@
   <meta charset="UTF-8">
   <title>诺言</title>
   <style>
-    /* 设置全站样式 */
+    /* 全局样式 */
     html, body {
       margin: 0;
       padding: 0;
       height: 100%;
-      font-family: '华文行楷', 'KaiTi', serif; /* 带有文学气息的字体 */
+      font-family: '华文行楷', 'KaiTi', serif;
       background: #f5f0e6 url('https://cdn.pixabay.com/photo/2016/07/19/00/26/paper-1527987_1280.jpg')  no-repeat center center fixed;
       background-size: cover;
       color: #3b3630;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
       overflow: hidden;
     }
 
     .container {
+      position: relative;
+      z-index: 2;
       width: 100%;
-      max-width: 500px;
-      padding: 40px;
+      max-width: 600px;
+      padding: 60px 40px;
       background-color: rgba(255, 255, 255, 0.85);
-      border-radius: 12px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
       animation: fadeInUp 1s ease-out;
+      text-align: center;
     }
 
     h1 {
-      font-size: 2em;
-      margin-bottom: 20px;
+      font-size: 2.5em;
+      margin-bottom: 25px;
       color: #5d4037;
     }
 
     img {
-      width: 200px;
+      width: 240px;
       height: auto;
       border-radius: 50%;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-      margin-bottom: 20px;
-      border: 3px solid #a1887f;
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+      margin-bottom: 25px;
+      border: 4px solid #a1887f;
     }
 
     button {
-      padding: 12px 24px;
-      font-size: 1em;
+      padding: 16px 30px;
+      font-size: 1.2em;
       cursor: pointer;
-      background-color: #81d4fa;
-      color: #fff;
+      background-color: #ff9800;
+      color: white;
       border: none;
-      border-radius: 30px;
+      border-radius: 35px;
       transition: transform 0.2s ease, background-color 0.3s ease;
-      margin-top: 20px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
     }
 
     button:hover {
-      background-color: #4fc3f7;
+      background-color: #fb8c00;
       transform: scale(1.05);
     }
 
     #sentence {
-      margin-top: 30px;
-      font-size: 1.3em;
+      margin-top: 40px;
+      font-size: 1.5em;
       color: #3e2c23;
       line-height: 1.8;
-      min-height: 80px;
+      min-height: 100px;
       opacity: 0;
       transform: translateY(10px);
-      transition: all 0.5s ease;
+      transition: all 0.6s ease;
     }
 
-    /* 动画：文字淡入上浮 */
+    /* 动画 */
     @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(40px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    /* 鼠标点击动效 */
-    .click-effect {
-      animation: clickBounce 0.3s ease;
+      from { opacity: 0; transform: translateY(60px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     @keyframes clickBounce {
@@ -96,12 +83,46 @@
       50% { transform: scale(1.1); }
       100% { transform: scale(1); }
     }
+
+    .click-effect {
+      animation: clickBounce 0.3s ease;
+    }
+
+    /* 花瓣飘落动画 */
+    .petal {
+      position: fixed;
+      top: -20px;
+      width: 20px;
+      height: 20px;
+      background: url('https://i.imgur.com/kVZS4rN.png')  no-repeat center center;
+      background-size: contain;
+      pointer-events: none;
+      animation-name: fall;
+      animation-duration: 10s;
+      animation-timing-function: linear;
+      animation-fill-mode: forwards;
+    }
+
+    @keyframes fall {
+      0% {
+        transform: translateX(0) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translateX(var(--x-end)) translateY(100vh) rotate(360deg);
+        opacity: 0;
+      }
+    }
   </style>
 </head>
 <body>
 
+  <!-- 飘落花瓣容器 -->
+  <div id="petal-container"></div>
+
+  <!-- 内容区域 -->
   <div class="container">
-    <h1>诺言</h1>
+    <h1>「诺言」</h1>
     <img src="nuo.png" alt="陈诺的照片">
     <button onclick="showRandomSentence()">读一句诺言</button>
     <div id="sentence"></div>
@@ -137,7 +158,7 @@
       const randomIndex = Math.floor(Math.random() * sentences.length);
       const randomSentence = sentences[randomIndex];
 
-      // 添加动效
+      // 添加句子淡入动效
       sentenceDiv.style.opacity = 0;
       sentenceDiv.style.transform = "translateY(10px)";
       setTimeout(() => {
@@ -152,6 +173,31 @@
       setTimeout(() => {
         btn.classList.remove("click-effect");
       }, 300);
+
+      // 创建花瓣
+      createPetal();
+    }
+
+    function createPetal() {
+      const petalContainer = document.getElementById("petal-container");
+      const petal = document.createElement("div");
+      petal.classList.add("petal");
+
+      // 随机起点位置
+      petal.style.left = Math.random() * window.innerWidth + "px";
+
+      // 随机动画持续时间和偏移方向
+      const duration = 8 + Math.random() * 4;
+      const xEnd = (Math.random() - 0.5) * 300 + "px";
+      petal.style.setProperty('--x-end', xEnd);
+      petal.style.animationDuration = duration + "s";
+
+      petalContainer.appendChild(petal);
+
+      // 移除花瓣元素以避免内存泄漏
+      setTimeout(() => {
+        petal.remove();
+      }, duration * 1000);
     }
   </script>
 
