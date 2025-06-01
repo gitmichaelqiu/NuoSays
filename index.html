@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>诺言</title>
   <style>
-    /* 全局样式 */
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
     }
 
-    html, body {
+    html,
+    body {
       height: 100%;
       font-family: '华文行楷', 'KaiTi', serif;
       background: #f9f5ef url('https://cdn.pixabay.com/photo/2016/07/19/00/26/paper-1527987_1280.jpg')  no-repeat center center fixed;
@@ -20,7 +20,6 @@
       overflow: hidden;
     }
 
-    /* 居中容器 */
     .wrapper {
       display: flex;
       justify-content: center;
@@ -30,7 +29,6 @@
       z-index: 2;
     }
 
-    /* 内容容器 */
     .container {
       width: 100%;
       max-width: 600px;
@@ -67,6 +65,7 @@
       border-radius: 35px;
       transition: transform 0.2s ease, background-color 0.3s ease;
       box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+      margin: 10px;
     }
 
     button:hover {
@@ -85,23 +84,33 @@
       transition: all 0.6s ease;
     }
 
-    /* 动画 */
     @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(60px); }
-      to { opacity: 1; transform: translateY(0); }
+      from {
+        opacity: 0;
+        transform: translateY(60px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     @keyframes clickBounce {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.1); }
-      100% { transform: scale(1); }
+      0% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.1);
+      }
+      100% {
+        transform: scale(1);
+      }
     }
 
     .click-effect {
       animation: clickBounce 0.3s ease;
     }
 
-    /* 花瓣飘落动画 */
     .petal {
       position: fixed;
       top: -30px;
@@ -128,6 +137,22 @@
         opacity: 0;
       }
     }
+
+    #playBtn {
+      margin-top: 10px;
+      padding: 8px 16px;
+      font-size: 1em;
+      background-color: #e1bee7;
+      color: #4a148c;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    #playBtn:hover {
+      background-color: #ce93d8;
+    }
   </style>
 </head>
 <body>
@@ -141,94 +166,98 @@
       <h1>「诺言」</h1>
       <img src="nuo.png" alt="陈诺的照片">
       <button onclick="showRandomSentence()">读一句诺言</button>
+      <button onclick="playAudio()" id="playBtn">🎵 开启背景音乐</button>
       <div id="sentence"></div>
     </div>
   </div>
 
   <!-- 背景音乐 -->
-  <audio autoplay loop id="bgAudio">
+  <audio id="bgAudio" loop>
     <source src="bgm.mp3" type="audio/mpeg">
     您的浏览器不支持音频播放。
   </audio>
 
-<script>
-  const sentences = [
-    "爱笑是我的招牌。",
-    "我性格开朗乐观、积极向上。",
-    "我还是个妥妥的慢性子。",
-    "不过，什么事都能泰然处之，不也很好吗？",
-    "我虽然个子不高，但浓缩就是精华嘛！",
-    "看不出吧，我还对球类运动情有独钟呢！",
-    "不得不说我对体育运动还有一丢丢悟性滴！",
-    "希望我能将运动会上取得的成就延续下去。",
-    "我是个阳光开朗的人，喜欢用我的笑容给他人带来快乐。",
-    "在为人处事中我也会尽量把事情做好，保证事情不在我这个环节脱落。",
-    "或许是我的名字，生来就与诚信有一定的缘分吧。",
-    "我会尽力做一个可靠的人，这本身就是一种成就感。",
-    "文明是个很大的范畴，涉及生活的方方面面。",
-    "文明不仅仅是一种行为，更是一种内在素养的外在表现。",
-    "希望我们能够共同汇聚成一束文明的光，创造一个文明的世界。"
-  ];
+  <script>
+    const sentences = [
+      "爱笑是我的招牌。",
+      "我性格开朗乐观、积极向上。",
+      "我还是个妥妥的慢性子。",
+      "不过，什么事都能泰然处之，不也很好吗？",
+      "我虽然个子不高，但浓缩就是精华嘛！",
+      "看不出吧，我还对球类运动情有独钟呢！",
+      "不得不说我对体育运动还有一丢丢悟性滴！",
+      "希望我能将运动会上取得的成就延续下去。",
+      "我是个阳光开朗的人，喜欢用我的笑容给他人带来快乐。",
+      "在为人处事中我也会尽量把事情做好，保证事情不在我这个环节脱落。",
+      "或许是我的名字，生来就与诚信有一定的缘分吧。",
+      "我会尽力做一个可靠的人，这本身就是一种成就感。",
+      "文明是个很大的范畴，涉及生活的方方面面。",
+      "文明不仅仅是一种行为，更是一种内在素养的外在表现。",
+      "希望我们能够共同汇聚成一束文明的光，创造一个文明的世界。"
+    ];
 
-  let lastIndex = -1; // 保存上一次显示的句子索引
+    let lastIndex = -1;
 
-  function showRandomSentence() {
-    const sentenceDiv = document.getElementById("sentence");
+    function showRandomSentence() {
+      const sentenceDiv = document.getElementById("sentence");
 
-    // 确保新索引与上一次不同
-    let randomIndex;
-    do {
-      randomIndex = Math.floor(Math.random() * sentences.length);
-    } while (randomIndex === lastIndex);
+      let randomIndex;
+      do {
+        randomIndex = Math.floor(Math.random() * sentences.length);
+      } while (randomIndex === lastIndex);
 
-    lastIndex = randomIndex;
-    const randomSentence = sentences[randomIndex];
+      lastIndex = randomIndex;
+      const randomSentence = sentences[randomIndex];
 
-    // 添加句子淡入动效
-    sentenceDiv.style.opacity = 0;
-    sentenceDiv.style.transform = "translateY(10px)";
-    setTimeout(() => {
-      sentenceDiv.textContent = randomSentence;
-      sentenceDiv.style.opacity = 1;
-      sentenceDiv.style.transform = "translateY(0)";
-    }, 100);
+      sentenceDiv.style.opacity = 0;
+      sentenceDiv.style.transform = "translateY(10px)";
+      setTimeout(() => {
+        sentenceDiv.textContent = randomSentence;
+        sentenceDiv.style.opacity = 1;
+        sentenceDiv.style.transform = "translateY(0)";
+      }, 100);
 
-    // 按钮点击动效
-    const btn = event.target;
-    btn.classList.add("click-effect");
-    setTimeout(() => {
-      btn.classList.remove("click-effect");
-    }, 300);
-  }
+      const btn = event.target;
+      btn.classList.add("click-effect");
+      setTimeout(() => {
+        btn.classList.remove("click-effect");
+      }, 300);
+    }
 
-  function createPetal() {
-    const petalContainer = document.getElementById("petal-container");
-    const petal = document.createElement("div");
-    petal.classList.add("petal");
+    function createPetal() {
+      const petalContainer = document.getElementById("petal-container");
+      const petal = document.createElement("div");
+      petal.classList.add("petal");
 
-    // 随机起点位置
-    petal.style.left = Math.random() * window.innerWidth + "px";
+      petal.style.left = Math.random() * window.innerWidth + "px";
 
-    // 随机动画偏移方向
-    const xEnd = (Math.random() - 0.5) * 300 + "px";
-    petal.style.setProperty('--x-end', xEnd);
+      const xEnd = (Math.random() - 0.5) * 300 + "px";
+      petal.style.setProperty('--x-end', xEnd);
 
-    // 随机初始旋转角度
-    const rotate = Math.floor(Math.random() * 360) + "deg";
-    petal.style.setProperty('--rotate', rotate);
+      const rotate = Math.floor(Math.random() * 360) + "deg";
+      petal.style.setProperty('--rotate', rotate);
 
-    // 添加到页面
-    petalContainer.appendChild(petal);
+      petalContainer.appendChild(petal);
 
-    // 移除花瓣以避免内存泄漏
-    setTimeout(() => {
-      petal.remove();
-    }, 12000);
-  }
+      setTimeout(() => {
+        petal.remove();
+      }, 12000);
+    }
 
-  // 页面加载后持续生成花瓣
-  setInterval(createPetal, 300); // 每隔 0.3 秒生成一个花瓣
-</script>
+    setInterval(createPetal, 300);
+
+    function playAudio() {
+      const audio = document.getElementById("bgAudio");
+      audio.play()
+        .then(() => {
+          document.getElementById("playBtn").style.display = "none";
+        })
+        .catch(err => {
+          alert("请先点击页面任意位置，再开启背景音乐");
+          console.error("播放失败:", err);
+        });
+    }
+  </script>
 
 </body>
 </html>
