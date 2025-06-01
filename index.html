@@ -4,50 +4,114 @@
   <meta charset="UTF-8">
   <title>诺言</title>
   <style>
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    /* 设置全站样式 */
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: '华文行楷', 'KaiTi', serif; /* 带有文学气息的字体 */
+      background: #f5f0e6 url('https://cdn.pixabay.com/photo/2016/07/19/00/26/paper-1527987_1280.jpg')  no-repeat center center fixed;
+      background-size: cover;
+      color: #3b3630;
+      display: flex;
+      justify-content: center;
+      align-items: center;
       text-align: center;
-      background-color: #f9f9f9;
+      overflow: hidden;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 500px;
       padding: 40px;
+      background-color: rgba(255, 255, 255, 0.85);
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      animation: fadeInUp 1s ease-out;
     }
+
     h1 {
-      color: #333;
+      font-size: 2em;
       margin-bottom: 20px;
+      color: #5d4037;
     }
+
     img {
-      width: 250px;
+      width: 200px;
       height: auto;
-      border-radius: 10px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-      margin-bottom: 30px;
+      border-radius: 50%;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      margin-bottom: 20px;
+      border: 3px solid #a1887f;
     }
+
     button {
-      padding: 10px 20px;
+      padding: 12px 24px;
       font-size: 1em;
       cursor: pointer;
-      background-color: #6a9fb5;
-      color: white;
+      background-color: #81d4fa;
+      color: #fff;
       border: none;
-      border-radius: 5px;
-      transition: background-color 0.3s ease;
+      border-radius: 30px;
+      transition: transform 0.2s ease, background-color 0.3s ease;
+      margin-top: 20px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     }
+
     button:hover {
-      background-color: #528aae;
+      background-color: #4fc3f7;
+      transform: scale(1.05);
     }
+
     #sentence {
       margin-top: 30px;
       font-size: 1.3em;
-      color: #444;
-      line-height: 1.6;
+      color: #3e2c23;
+      line-height: 1.8;
+      min-height: 80px;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: all 0.5s ease;
+    }
+
+    /* 动画：文字淡入上浮 */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(40px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* 鼠标点击动效 */
+    .click-effect {
+      animation: clickBounce 0.3s ease;
+    }
+
+    @keyframes clickBounce {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
     }
   </style>
 </head>
 <body>
 
-  <h1>诺言</h1>
-  <img src="nuo.png" alt="陈诺的照片">
-  <button onclick="showRandomSentence()">读一句诺言</button>
-  <div id="sentence"></div>
+  <div class="container">
+    <h1>诺言</h1>
+    <img src="nuo.png" alt="陈诺的照片">
+    <button onclick="showRandomSentence()">读一句诺言</button>
+    <div id="sentence"></div>
+  </div>
+
+  <!-- 背景音乐 -->
+  <audio autoplay loop id="bgAudio">
+    <source src="bgm.mp3" type="audio/mpeg">
+    您的浏览器不支持音频播放。
+  </audio>
 
   <script>
     const sentences = [
@@ -69,9 +133,25 @@
     ];
 
     function showRandomSentence() {
+      const sentenceDiv = document.getElementById("sentence");
       const randomIndex = Math.floor(Math.random() * sentences.length);
       const randomSentence = sentences[randomIndex];
-      document.getElementById("sentence").textContent = randomSentence;
+
+      // 添加动效
+      sentenceDiv.style.opacity = 0;
+      sentenceDiv.style.transform = "translateY(10px)";
+      setTimeout(() => {
+        sentenceDiv.textContent = randomSentence;
+        sentenceDiv.style.opacity = 1;
+        sentenceDiv.style.transform = "translateY(0)";
+      }, 100);
+
+      // 按钮点击动效
+      const btn = event.target;
+      btn.classList.add("click-effect");
+      setTimeout(() => {
+        btn.classList.remove("click-effect");
+      }, 300);
     }
   </script>
 
