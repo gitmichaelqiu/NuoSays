@@ -151,75 +151,84 @@
     您的浏览器不支持音频播放。
   </audio>
 
-  <script>
-    const sentences = [
-      "爱笑是我的招牌。",
-      "我性格开朗乐观、积极向上。",
-      "我还是个妥妥的慢性子。",
-      "不过，什么事都能泰然处之，不也很好吗？",
-      "我虽然个子不高，但浓缩就是精华嘛！",
-      "看不出吧，我还对球类运动情有独钟呢！",
-      "不得不说我对体育运动还有一丢丢悟性滴！",
-      "希望我能将运动会上取得的成就延续下去。",
-      "我是个阳光开朗的人，喜欢用我的笑容给他人带来快乐。",
-      "在为人处事中我也会尽量把事情做好，保证事情不在我这个环节脱落。",
-      "或许是我的名字，生来就与诚信有一定的缘分吧。",
-      "我会尽力做一个可靠的人，这本身就是一种成就感。",
-      "文明是个很大的范畴，涉及生活的方方面面。",
-      "文明不仅仅是一种行为，更是一种内在素养的外在表现。",
-      "希望我们能够共同汇聚成一束文明的光，创造一个文明的世界。"
-    ];
+<script>
+  const sentences = [
+    "爱笑是我的招牌。",
+    "我性格开朗乐观、积极向上。",
+    "我还是个妥妥的慢性子。",
+    "不过，什么事都能泰然处之，不也很好吗？",
+    "我虽然个子不高，但浓缩就是精华嘛！",
+    "看不出吧，我还对球类运动情有独钟呢！",
+    "不得不说我对体育运动还有一丢丢悟性滴！",
+    "希望我能将运动会上取得的成就延续下去。",
+    "我是个阳光开朗的人，喜欢用我的笑容给他人带来快乐。",
+    "在为人处事中我也会尽量把事情做好，保证事情不在我这个环节脱落。",
+    "或许是我的名字，生来就与诚信有一定的缘分吧。",
+    "我会尽力做一个可靠的人，这本身就是一种成就感。",
+    "文明是个很大的范畴，涉及生活的方方面面。",
+    "文明不仅仅是一种行为，更是一种内在素养的外在表现。",
+    "希望我们能够共同汇聚成一束文明的光，创造一个文明的世界。"
+  ];
 
-    function showRandomSentence() {
-      const sentenceDiv = document.getElementById("sentence");
-      const randomIndex = Math.floor(Math.random() * sentences.length);
-      const randomSentence = sentences[randomIndex];
+  let lastIndex = -1; // 保存上一次显示的句子索引
 
-      // 添加句子淡入动效
-      sentenceDiv.style.opacity = 0;
-      sentenceDiv.style.transform = "translateY(10px)";
-      setTimeout(() => {
-        sentenceDiv.textContent = randomSentence;
-        sentenceDiv.style.opacity = 1;
-        sentenceDiv.style.transform = "translateY(0)";
-      }, 100);
+  function showRandomSentence() {
+    const sentenceDiv = document.getElementById("sentence");
 
-      // 按钮点击动效
-      const btn = event.target;
-      btn.classList.add("click-effect");
-      setTimeout(() => {
-        btn.classList.remove("click-effect");
-      }, 300);
-    }
+    // 确保新索引与上一次不同
+    let randomIndex;
+    do {
+      randomIndex = Math.floor(Math.random() * sentences.length);
+    } while (randomIndex === lastIndex);
 
-    function createPetal() {
-      const petalContainer = document.getElementById("petal-container");
-      const petal = document.createElement("div");
-      petal.classList.add("petal");
+    lastIndex = randomIndex;
+    const randomSentence = sentences[randomIndex];
 
-      // 随机起点位置
-      petal.style.left = Math.random() * window.innerWidth + "px";
+    // 添加句子淡入动效
+    sentenceDiv.style.opacity = 0;
+    sentenceDiv.style.transform = "translateY(10px)";
+    setTimeout(() => {
+      sentenceDiv.textContent = randomSentence;
+      sentenceDiv.style.opacity = 1;
+      sentenceDiv.style.transform = "translateY(0)";
+    }, 100);
 
-      // 随机动画偏移方向
-      const xEnd = (Math.random() - 0.5) * 300 + "px";
-      petal.style.setProperty('--x-end', xEnd);
+    // 按钮点击动效
+    const btn = event.target;
+    btn.classList.add("click-effect");
+    setTimeout(() => {
+      btn.classList.remove("click-effect");
+    }, 300);
+  }
 
-      // 随机初始旋转角度
-      const rotate = Math.floor(Math.random() * 360) + "deg";
-      petal.style.setProperty('--rotate', rotate);
+  function createPetal() {
+    const petalContainer = document.getElementById("petal-container");
+    const petal = document.createElement("div");
+    petal.classList.add("petal");
 
-      // 添加到页面
-      petalContainer.appendChild(petal);
+    // 随机起点位置
+    petal.style.left = Math.random() * window.innerWidth + "px";
 
-      // 移除花瓣以避免内存泄漏
-      setTimeout(() => {
-        petal.remove();
-      }, 12000);
-    }
+    // 随机动画偏移方向
+    const xEnd = (Math.random() - 0.5) * 300 + "px";
+    petal.style.setProperty('--x-end', xEnd);
 
-    // 页面加载后持续生成花瓣
-    setInterval(createPetal, 300); // 每隔 0.3 秒生成一个花瓣
-  </script>
+    // 随机初始旋转角度
+    const rotate = Math.floor(Math.random() * 360) + "deg";
+    petal.style.setProperty('--rotate', rotate);
+
+    // 添加到页面
+    petalContainer.appendChild(petal);
+
+    // 移除花瓣以避免内存泄漏
+    setTimeout(() => {
+      petal.remove();
+    }, 12000);
+  }
+
+  // 页面加载后持续生成花瓣
+  setInterval(createPetal, 300); // 每隔 0.3 秒生成一个花瓣
+</script>
 
 </body>
 </html>
