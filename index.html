@@ -137,22 +137,6 @@
         opacity: 0;
       }
     }
-
-    #playBtn {
-      margin-top: 10px;
-      padding: 8px 16px;
-      font-size: 1em;
-      background-color: #e1bee7;
-      color: #4a148c;
-      border: none;
-      border-radius: 20px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-
-    #playBtn:hover {
-      background-color: #ce93d8;
-    }
   </style>
 </head>
 <body>
@@ -166,7 +150,6 @@
       <h1>「诺言」</h1>
       <img src="nuo.png" alt="陈诺的照片">
       <button onclick="showRandomSentence()">读一句诺言</button>
-      <button onclick="playAudio()" id="playBtn">🎵 开启背景音乐</button>
       <div id="sentence"></div>
     </div>
   </div>
@@ -197,10 +180,18 @@
     ];
 
     let lastIndex = -1;
+    let hasPlayedMusic = false; // 新增变量，记录是否已播放音乐
 
     function showRandomSentence() {
       const sentenceDiv = document.getElementById("sentence");
 
+      // 如果是第一次点击，播放背景音乐
+      if (!hasPlayedMusic) {
+        playAudio();
+        hasPlayedMusic = true;
+      }
+
+      // 显示新句子
       let randomIndex;
       do {
         randomIndex = Math.floor(Math.random() * sentences.length);
@@ -217,6 +208,7 @@
         sentenceDiv.style.transform = "translateY(0)";
       }, 100);
 
+      // 动效处理
       const btn = event.target;
       btn.classList.add("click-effect");
       setTimeout(() => {
@@ -249,11 +241,8 @@
     function playAudio() {
       const audio = document.getElementById("bgAudio");
       audio.play()
-        .then(() => {
-          document.getElementById("playBtn").style.display = "none";
-        })
+        .then(() => console.log("背景音乐已播放"))
         .catch(err => {
-          alert("请先点击页面任意位置，再开启背景音乐");
           console.error("播放失败:", err);
         });
     }
