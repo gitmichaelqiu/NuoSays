@@ -5,32 +5,45 @@
   <title>诺言</title>
   <style>
     /* 全局样式 */
-    html, body {
+    * {
       margin: 0;
       padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
       height: 100%;
       font-family: '华文行楷', 'KaiTi', serif;
-      background: #f5f0e6 url('https://cdn.pixabay.com/photo/2016/07/19/00/26/paper-1527987_1280.jpg')  no-repeat center center fixed;
+      background: #f9f5ef url('https://cdn.pixabay.com/photo/2016/07/19/00/26/paper-1527987_1280.jpg')  no-repeat center center fixed;
       background-size: cover;
       color: #3b3630;
       overflow: hidden;
     }
 
-    .container {
+    /* 居中容器 */
+    .wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
       position: relative;
       z-index: 2;
+    }
+
+    /* 内容容器 */
+    .container {
       width: 100%;
       max-width: 600px;
       padding: 60px 40px;
-      background-color: rgba(255, 255, 255, 0.85);
-      border-radius: 16px;
+      background-color: rgba(255, 255, 255, 0.9);
+      border-radius: 20px;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
       animation: fadeInUp 1s ease-out;
       text-align: center;
     }
 
     h1 {
-      font-size: 2.5em;
+      font-size: 2.8em;
       margin-bottom: 25px;
       color: #5d4037;
     }
@@ -48,7 +61,7 @@
       padding: 16px 30px;
       font-size: 1.2em;
       cursor: pointer;
-      background-color: #ff9800;
+      background-color: #c2185b;
       color: white;
       border: none;
       border-radius: 35px;
@@ -57,7 +70,7 @@
     }
 
     button:hover {
-      background-color: #fb8c00;
+      background-color: #ad1457;
       transform: scale(1.05);
     }
 
@@ -91,25 +104,27 @@
     /* 花瓣飘落动画 */
     .petal {
       position: fixed;
-      top: -20px;
-      width: 20px;
-      height: 20px;
-      background: url('https://i.imgur.com/kVZS4rN.png')  no-repeat center center;
+      top: -30px;
+      width: 30px;
+      height: 30px;
+      background: url('petal.png') no-repeat center center;
       background-size: contain;
       pointer-events: none;
       animation-name: fall;
-      animation-duration: 10s;
+      animation-duration: 12s;
       animation-timing-function: linear;
       animation-fill-mode: forwards;
+      z-index: 1;
+      transform: rotate(var(--rotate));
     }
 
     @keyframes fall {
       0% {
-        transform: translateX(0) rotate(0deg);
+        transform: translateX(0) rotate(var(--rotate));
         opacity: 1;
       }
       100% {
-        transform: translateX(var(--x-end)) translateY(100vh) rotate(360deg);
+        transform: translateX(var(--x-end)) translateY(100vh) rotate(calc(var(--rotate) + 360deg));
         opacity: 0;
       }
     }
@@ -121,11 +136,13 @@
   <div id="petal-container"></div>
 
   <!-- 内容区域 -->
-  <div class="container">
-    <h1>「诺言」</h1>
-    <img src="nuo.png" alt="陈诺的照片">
-    <button onclick="showRandomSentence()">读一句诺言</button>
-    <div id="sentence"></div>
+  <div class="wrapper">
+    <div class="container">
+      <h1>「诺言」</h1>
+      <img src="nuo.png" alt="陈诺的照片">
+      <button onclick="showRandomSentence()">读一句诺言</button>
+      <div id="sentence"></div>
+    </div>
   </div>
 
   <!-- 背景音乐 -->
@@ -173,9 +190,6 @@
       setTimeout(() => {
         btn.classList.remove("click-effect");
       }, 300);
-
-      // 创建花瓣
-      createPetal();
     }
 
     function createPetal() {
@@ -186,19 +200,25 @@
       // 随机起点位置
       petal.style.left = Math.random() * window.innerWidth + "px";
 
-      // 随机动画持续时间和偏移方向
-      const duration = 8 + Math.random() * 4;
+      // 随机动画偏移方向
       const xEnd = (Math.random() - 0.5) * 300 + "px";
       petal.style.setProperty('--x-end', xEnd);
-      petal.style.animationDuration = duration + "s";
 
+      // 随机初始旋转角度
+      const rotate = Math.floor(Math.random() * 360) + "deg";
+      petal.style.setProperty('--rotate', rotate);
+
+      // 添加到页面
       petalContainer.appendChild(petal);
 
-      // 移除花瓣元素以避免内存泄漏
+      // 移除花瓣以避免内存泄漏
       setTimeout(() => {
         petal.remove();
-      }, duration * 1000);
+      }, 12000);
     }
+
+    // 页面加载后持续生成花瓣
+    setInterval(createPetal, 300); // 每隔 0.3 秒生成一个花瓣
   </script>
 
 </body>
